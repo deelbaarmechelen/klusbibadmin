@@ -2,8 +2,13 @@
   "name": "admin",
   "version": "1.0.0",
   "description": "admin pages for klusbib",
-  "main": "admin.js",
+  "engines": {
+    "node": "6.9.4"
+  },
+  "repository": "https://github.com/renardeau/klusbibadmin",
   "scripts": {
+    "prestart": "npm install",
+    "start": "http-server -p 5000 -c-1 .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
