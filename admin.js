@@ -12,7 +12,7 @@ myApp.constant('__env', env);
 
 myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     var admin = nga.application('Klusbib Admin')
-    .baseApiUrl(__env.apiUrl + '/public/'); // main API endpoint
+    .baseApiUrl(__env.apiUrl + '/'); // main API endpoint
 
     var tool = nga.entity('tools'); // the API endpoint for users will be '/api/public/tools/:id
     tool.listView()
