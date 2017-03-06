@@ -5,7 +5,10 @@ if(window){
   Object.assign(env, window.__env);
 }
 
-var myApp = angular.module('myApp', ['ng-admin']);
+var myApp = angular.module('myApp', [
+	'ng-admin',
+	'ngStorage'
+]);
 
 //Register environment in AngularJS as constant
 myApp.constant('__env', env);
@@ -82,3 +85,24 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 
     nga.configure(admin);
 }]);
+
+// still required??
+myApp.config(['RestangularProvider', '$localStorageProvider', function (RestangularProvider, $localStorageProvider) {
+	RestangularProvider.setDefaultHeaders({Authorization: "Bearer x-restangular"});
+}]);
+
+myApp.run(function(Restangular, $location, $localStorage) {
+	Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params) {
+		  headers = headers || {};
+		  if ($localStorage.token) {
+		      headers.Authorization = 'Bearer ' + $localStorage.token;
+		  } else {
+//			  $location.path("/signin");
+//			  headers.Authorization = 'Bearer ' + '654321';
+		  }
+		
+		  return { headers: headers };
+		});
+});
+
+
