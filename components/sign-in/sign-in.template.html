@@ -1,9 +1,6 @@
 <div class="row">
     <div class="col-lg-6 col-lg-offset-3">
         <div class="panel panel-primary">
-            <div class="panel-heading">
-                <strong>Sign in</strong>
-            </div>
             <div class="panel-body">
                 <form class="form-horizontal" role="form" ng-submit="$ctrl.signin()">
                     <div class="form-group">
@@ -24,13 +21,11 @@
                     <div class="form-group">
                         <div class="col-sm-offset-2 col-sm-10">
                             <button type="submit" class="btn btn-primary pull-right">Sign in</button>
+							<button type="button" class="btn btn-primary pull-right" ng-click="$ctrl.signout()">Sign out</button>
                         </div>
                     </div>
                     <p data-ng-show="$ctrl.error" class="error">{{ $ctrl.error }}</p>
                 </form>
-				<button ng-click="$ctrl.signout()">
-				  Logout
-				</button>
            </div>
         </div>
     </div>
