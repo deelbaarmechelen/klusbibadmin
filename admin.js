@@ -92,13 +92,20 @@ myApp.config(['RestangularProvider', '$localStorageProvider', function (Restangu
 }]);
 
 myApp.run(function(Restangular, $location, $localStorage) {
+    var islogged = function () {
+        if (!$localStorage.token) {
+             return false;
+        } else {
+        	return true;
+        }
+    }
+	if (!islogged()) {
+		window.location = "/login.html";
+	}
 	Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params) {
 		  headers = headers || {};
 		  if ($localStorage.token) {
 		      headers.Authorization = 'Bearer ' + $localStorage.token;
-		  } else {
-//			  $location.path("/signin");
-//			  headers.Authorization = 'Bearer ' + '654321';
 		  }
 		
 		  return { headers: headers };
