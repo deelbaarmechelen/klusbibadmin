@@ -17,13 +17,14 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     var admin = nga.application('Klusbib Admin')
     .baseApiUrl(__env.apiUrl + '/'); // main API endpoint
 
-    var tool = nga.entity('tools'); // the API endpoint for users will be '/api/public/tools/:id
+    var tool = nga.entity('tools')
+    	.identifier(nga.field('tool_id')); // the API endpoint for tools will be '__env.apiUrl/tools/:id
     tool.listView()
         .fields([
+            nga.field('tool_id').isDetailLink(true),
             nga.field('name').isDetailLink(true),
             nga.field('description'),
-            nga.field('category'),
-            nga.field('link') // Why is link missing??
+            nga.field('category')
         ]);
     tool.creationView().fields([
         nga.field('name')
@@ -32,7 +33,9 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('category'),
         nga.field('link'),
     ]);
-    tool.editionView().fields(tool.creationView().fields());
+    tool.editionView().fields(
+            nga.field('tool_id').editable(false),
+            tool.creationView().fields());
     admin.addEntity(tool)
 
     var user = nga.entity('users').identifier(nga.field('user_id'));; // the API endpoint for users will be '/api/public/tools/:id
@@ -52,7 +55,9 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('membership_start_date'),
         nga.field('membership_end_date'),
     ]);
-    user.editionView().fields(user.creationView().fields());
+    user.editionView().fields(
+            nga.field('user_id').editable(false),
+            user.creationView().fields());
     user.showView().fields([
         nga.field('firstname'),
         nga.field('lastname'),
@@ -71,11 +76,21 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     var reservation = nga.entity('reservations').identifier(nga.field('reservation_id'));;
     reservation.listView()
         .fields([
+            nga.field('reservation_id').isDetailLink(true),
             nga.field('title').isDetailLink(true),
             nga.field('startsAt'),
             nga.field('endsAt'),
             nga.field('type'),
-        ])
+    ]);
+    reservation.creationView().fields([
+        nga.field('tool_id'),
+        nga.field('user_id'),
+        nga.field('title'),
+        nga.field('startsAt'),
+        nga.field('endsAt'),
+        nga.field('type')
+    ]);
+    reservation.editionView().fields(reservation.creationView().fields());
     admin.addEntity(reservation);
 
 //    admin.menu(nga.menu()
