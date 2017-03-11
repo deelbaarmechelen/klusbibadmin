@@ -20,7 +20,6 @@ angular.module('signIn').component('signIn', {
               Auth.signin(formData.email, formData.password, function (res) {
 	            $localStorage.token = res.data.token;
 	            self.error = 'Success';
-//	            $location.path("/");
 	            window.location = "/";
               }, function () {
             	  self.error = 'Invalid credentials.';
