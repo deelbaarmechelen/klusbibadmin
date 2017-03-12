@@ -31,7 +31,15 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             .validation({ required: true, minlength: 2, maxlength: 50 }),
         nga.field('description'),
         nga.field('category'),
-        nga.field('link'),
+        nga.field('brand'),
+        nga.field('type'),
+        nga.field('serial'),
+        nga.field('manufacturing_year')
+                    .validation({ minlength: 4, maxlength: 4 }),
+        nga.field('manufacturer_url'),
+        nga.field('img'),
+        nga.field('doc_url'),
+        nga.field('replacement_value'),
     ]);
     tool.editionView().fields(
             nga.field('tool_id').editable(false),
