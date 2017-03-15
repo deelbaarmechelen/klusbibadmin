@@ -101,6 +101,35 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     reservation.editionView().fields(reservation.creationView().fields());
     admin.addEntity(reservation);
 
+    var consumer = nga.entity('consumers')
+	.identifier(nga.field('consumer_id')); // the API endpoint for tools will be '__env.apiUrl/consumers/:id
+consumer.listView()
+    .fields([
+        nga.field('consumer_id').isDetailLink(true),
+        nga.field('category'),
+        nga.field('brand').isDetailLink(true),
+        nga.field('reference').isDetailLink(true),
+        nga.field('description')
+    ]);
+consumer.creationView().fields([
+    nga.field('category'),
+    nga.field('brand'),
+    nga.field('reference'),
+    nga.field('description'),
+    nga.field('price'),
+    nga.field('unit'),
+    nga.field('stock'),
+    nga.field('low_stock'),
+    nga.field('packed_per'),
+    nga.field('provider'),
+    nga.field('comment'),
+    nga.field('public'),
+]);
+consumer.editionView().fields(
+        nga.field('consumer_id').editable(false),
+        consumer.creationView().fields());
+admin.addEntity(consumer)
+
 //    admin.menu(nga.menu()
 //        .addChild(nga.menu(user).icon('<span class="glyphicon glyphicon-user"></span>'))
 //        .addChild(nga.menu(post).icon('<span class="glyphicon glyphicon-pencil"></span>'))
