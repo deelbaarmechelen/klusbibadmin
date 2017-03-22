@@ -138,11 +138,6 @@ admin.addEntity(consumer)
     nga.configure(admin);
 }]);
 
-// still required??
-myApp.config(['RestangularProvider', '$localStorageProvider', function (RestangularProvider, $localStorageProvider) {
-	RestangularProvider.setDefaultHeaders({Authorization: "Bearer x-restangular"});
-}]);
-
 myApp.run(function(Restangular, $location, $localStorage) {
     var islogged = function () {
         if (!$localStorage.token) {
@@ -154,6 +149,7 @@ myApp.run(function(Restangular, $location, $localStorage) {
 	if (!islogged()) {
 		window.location = "/login.html";
 	}
+
 	Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params) {
 		  headers = headers || {};
 		  if ($localStorage.token) {
@@ -162,6 +158,14 @@ myApp.run(function(Restangular, $location, $localStorage) {
 		
 		  return { headers: headers };
 		});
+
+	Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
+	    if(response.status === 401) {
+			window.location = "/login.html";
+	        return false; // error handled
+	    }
+	    return true; // error not handled
+	});
 });
 
 
