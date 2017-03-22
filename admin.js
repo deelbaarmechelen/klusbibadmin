@@ -30,7 +30,16 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('name')
             .validation({ required: true, minlength: 2, maxlength: 50 }),
         nga.field('description'),
-        nga.field('category'),
+        nga.field('category', 'choice')
+        	.choices([
+        		{ value: 'general', label: 'Algemeen' },
+        		{ value: 'car', label: 'Auto' },
+        		{ value: 'construction', label: 'Bouw' },
+        		{ value: 'electricity', label: 'Elektriciteit' },
+        		{ value: 'sanitary', label: 'Sanitair' },
+        		{ value: 'wood', label: 'Schrijnwerk' },
+        		{ value: 'garden', label: 'Tuin' },
+        ]),
         nga.field('brand'),
         nga.field('type'),
         nga.field('serial'),
@@ -59,7 +68,11 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             .validation({ required: true, minlength: 2, maxlength: 20 }),
         nga.field('lastname')
             .validation({ required: true, minlength: 2, maxlength: 20 }),
-        nga.field('role'),
+        nga.field('role', 'choice')
+    		.choices([
+    			{ value: 'admin', label: 'Admin' },
+    			{ value: 'member', label: 'Lid' },
+    	]),
         nga.field('membership_start_date'),
         nga.field('membership_end_date'),
     ]);
@@ -88,7 +101,12 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             nga.field('title').isDetailLink(true),
             nga.field('startsAt'),
             nga.field('endsAt'),
-            nga.field('type'),
+            nga.field('type', 'choice')
+			.choices([
+				{ value: 'maintenance', label: 'Onderhoud' },
+				{ value: 'reservation', label: 'Reservatie' },
+				{ value: 'loan', label: 'Uitgeleend' },
+		])
     ]);
     reservation.creationView().fields([
         nga.field('tool_id'),
@@ -96,7 +114,12 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('title'),
         nga.field('startsAt'),
         nga.field('endsAt'),
-        nga.field('type')
+        nga.field('type', 'choice')
+			.choices([
+				{ value: 'maintenance', label: 'Onderhoud' },
+				{ value: 'reservation', label: 'Reservatie' },
+				{ value: 'loan', label: 'Uitgeleend' },
+		])
     ]);
     reservation.editionView().fields(reservation.creationView().fields());
     admin.addEntity(reservation);
