@@ -68,6 +68,8 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             .validation({ required: true, minlength: 2, maxlength: 20 }),
         nga.field('lastname')
             .validation({ required: true, minlength: 2, maxlength: 20 }),
+        nga.field('email', 'email'),
+//        nga.field('hash', 'password'),
         nga.field('role', 'choice')
     		.choices([
     			{ value: 'admin', label: 'Admin' },
@@ -76,7 +78,12 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('membership_start_date'),
         nga.field('membership_end_date'),
     ]);
-    user.editionView().fields(
+    user.editionView()
+    	.title('Edit user "{{ entry.values.firstname }} {{ entry.values.lastname }}"')
+    	.fields(
+       		nga.field('custom_action')
+       		.label('Paswoord reset')
+       		.template('<reset-password post="entry"></reset-password>'),
             nga.field('user_id').editable(false),
             user.creationView().fields());
     user.showView().fields([
@@ -125,41 +132,66 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     admin.addEntity(reservation);
 
     var consumer = nga.entity('consumers')
-	.identifier(nga.field('consumer_id')); // the API endpoint for tools will be '__env.apiUrl/consumers/:id
-consumer.listView()
-    .fields([
-        nga.field('consumer_id').isDetailLink(true),
-        nga.field('category'),
-        nga.field('brand').isDetailLink(true),
-        nga.field('reference').isDetailLink(true),
-        nga.field('description')
-    ]);
-consumer.creationView().fields([
-    nga.field('category'),
-    nga.field('brand'),
-    nga.field('reference'),
-    nga.field('description'),
-    nga.field('price'),
-    nga.field('unit'),
-    nga.field('stock'),
-    nga.field('low_stock'),
-    nga.field('packed_per'),
-    nga.field('provider'),
-    nga.field('comment'),
-    nga.field('public'),
-]);
-consumer.editionView().fields(
-        nga.field('consumer_id').editable(false),
-        consumer.creationView().fields());
-admin.addEntity(consumer)
+		.identifier(nga.field('consumer_id')); // the API endpoint for tools will be '__env.apiUrl/consumers/:id
+	consumer.listView()
+	    .fields([
+	        nga.field('consumer_id').isDetailLink(true),
+	        nga.field('category'),
+	        nga.field('brand').isDetailLink(true),
+	        nga.field('reference').isDetailLink(true),
+	        nga.field('description')
+	    ]);
+	consumer.creationView().fields([
+	    nga.field('category'),
+	    nga.field('brand'),
+	    nga.field('reference'),
+	    nga.field('description'),
+	    nga.field('price'),
+	    nga.field('unit'),
+	    nga.field('stock'),
+	    nga.field('low_stock'),
+	    nga.field('packed_per'),
+	    nga.field('provider'),
+	    nga.field('comment'),
+	    nga.field('public'),
+	]);
+	consumer.editionView().fields(
+	        nga.field('consumer_id').editable(false),
+	        consumer.creationView().fields());
+	admin.addEntity(consumer);
 
-//    admin.menu(nga.menu()
-//        .addChild(nga.menu(user).icon('<span class="glyphicon glyphicon-user"></span>'))
-//        .addChild(nga.menu(post).icon('<span class="glyphicon glyphicon-pencil"></span>'))
-//    );
+	admin.menu(nga.menu()
+	  .addChild(nga.menu(user).title('Gebruikers')
+//			  .addChild(nga.menu().title('Paswoord reset'))
+			  )
+	  .addChild(nga.menu(tool).title('Materiaal'))
+	  .addChild(nga.menu(reservation).title('Reservaties'))
+	  .addChild(nga.menu(consumer).title('Verbruiksmaterialen'))
+			  //.icon('<span class="glyphicon glyphicon-tags"></span>'))
+//	  .addChild(nga.menu()
+//	            .title('Logout')
+//	            .link('/login')
+//	            .active(function(path) {
+//	                return path.indexOf('//login') === 0;
+//	            })
+//	        )
+	);
 
     nga.configure(admin);
 }]);
+
+myApp.config(function ($stateProvider) {
+
+    $stateProvider.state('reset-password', {
+        parent: 'ng-admin',
+        url: '/resetPassword/:id',
+        params: { id: null },
+        controller: resetPwdController,
+        controllerAs: 'controller',
+        template: resetPwdControllerTemplate
+    });
+
+});
 
 myApp.run(function(Restangular, $location, $localStorage) {
     var islogged = function () {
@@ -191,4 +223,49 @@ myApp.run(function(Restangular, $location, $localStorage) {
 	});
 });
 
+myApp.directive('resetPassword', ['$location', function ($location) {
+    return {
+        restrict: 'E',
+        scope: { post: '&' },
+        link: function (scope) {
+            scope.send = function () {
+                $location.path('/resetPassword/' + scope.post().values.user_id);
+            };
+        },
+        template: '<a class="btn btn-default" ng-click="send()">Verander paswoord</a>'
+    };
+}]);
+
+function resetPwdController($scope, $stateParams, notification, $http, $localStorage, __env) {
+    this.userId = $stateParams.id;
+    // notification is the service used to display notifications on the top of the screen
+    this.notification = notification;
+    this.http = $http;
+    this.localStorage = $localStorage;
+    this.apiUrl = __env.apiUrl;
+};
+resetPwdController.inject = ['$scope', '$stateParams', 'notification', '$http', '$localStorage', '__env'];
+resetPwdController.prototype.resetPwd = function() {
+    var data = { password : this.password };
+    var self = this;
+    this.http.put(this.apiUrl + '/users/' + this.userId, data, {
+        headers: {'Authorization': 'Bearer ' + this.localStorage.token}
+    }).then(function() {
+    	self.notification.log('Password successfully updated for ' + self.userId +  '(' + self.password + ')');
+    }, function() {
+    	self.notification.log('Password update failed for ' + self.userId +  '(' + self.password + ')');
+    });
+};
+
+var resetPwdControllerTemplate =
+    '<div class="row"><div class="col-lg-12">' +
+        '<ma-view-actions><ma-back-button></ma-back-button></ma-view-actions>' +
+        '<div class="page-header">' +
+            '<h1>Paswoord reset voor gebruiker met id {{ controller.userId }}</h1>' +
+        '</div>' +
+    '</div></div>' +
+    '<div class="row">' +
+    '<div class="col-lg-5"><input type="text" size="20" ng-model="controller.password" class="form-control" placeholder="[nieuw paswoord]"/></div>' +
+    '<div class="col-lg-2"><a class="btn btn-default" ng-click="controller.resetPwd()">Reset</a></div>' +
+    '</div>';
 
