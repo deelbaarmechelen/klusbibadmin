@@ -24,7 +24,16 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             nga.field('tool_id').isDetailLink(true),
             nga.field('name').isDetailLink(true),
             nga.field('description'),
-            nga.field('category')
+            nga.field('category', 'choice')
+        	.choices([
+        		{ value: 'general', label: 'Algemeen' },
+        		{ value: 'car', label: 'Auto' },
+        		{ value: 'construction', label: 'Bouw' },
+        		{ value: 'electricity', label: 'Elektriciteit' },
+        		{ value: 'sanitary', label: 'Sanitair' },
+        		{ value: 'wood', label: 'Schrijnwerk' },
+        		{ value: 'garden', label: 'Tuin' },
+        	])
         ]);
     tool.creationView().fields([
         nga.field('name')
@@ -42,6 +51,9 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         ]),
         nga.field('brand'),
         nga.field('type'),
+        nga.field('code'),
+        nga.field('owner_id'),
+        nga.field('reception_date'),
         nga.field('serial'),
         nga.field('manufacturing_year')
                     .validation({ minlength: 4, maxlength: 4 }),
@@ -52,6 +64,9 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     ]);
     tool.editionView().fields(
             nga.field('tool_id').editable(false),
+//       		nga.field('custom_action')
+//       		.label('Reserveer')
+//       		.template('<button post="entry"></button>'),
             tool.creationView().fields());
     admin.addEntity(tool)
 
@@ -105,9 +120,11 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     reservation.listView()
         .fields([
             nga.field('reservation_id').isDetailLink(true),
+            nga.field('tool_id'),
+            nga.field('user_id'),
             nga.field('title').isDetailLink(true),
-            nga.field('startsAt'),
-            nga.field('endsAt'),
+            nga.field('startsAt', 'date'),
+            nga.field('endsAt', 'date'),
             nga.field('type', 'choice')
 			.choices([
 				{ value: 'maintenance', label: 'Onderhoud' },
@@ -153,7 +170,11 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 	    nga.field('packed_per'),
 	    nga.field('provider'),
 	    nga.field('comment'),
-	    nga.field('public'),
+        nga.field('public', 'choice')
+		.choices([
+			{ value: 0, label: 'Nee' },
+			{ value: 1, label: 'Ja' },
+		])
 	]);
 	consumer.editionView().fields(
 	        nga.field('consumer_id').editable(false),
@@ -222,6 +243,19 @@ myApp.run(function(Restangular, $location, $localStorage) {
 	    return true; // error not handled
 	});
 });
+
+//myApp.directive('reservation', ['$location', function ($location) {
+//    return {
+//        restrict: 'E',
+//        scope: { post: '&' },
+//        link: function (scope) {
+//            scope.send = function () {
+//                $location.path('/reservations/create' + scope.post().values.user_id);
+//            };
+//        },
+//        template: '<a class="btn btn-default" ng-click="send()">Reserveer</a>'
+//    };
+//}]);
 
 myApp.directive('resetPassword', ['$location', function ($location) {
     return {
