@@ -4,10 +4,6 @@ var appSignin = angular.module('signIn', [
 	  'base64'
 ]);
 
-//appSignin.config(function($httpProvider, $base64) {
-//    var auth = $base64.encode("admin@klusbib.be:test");
-//    $httpProvider.defaults.headers.common['Authorization'] = 'Basic ' + auth;
-//})
 appSignin.factory('Auth', ['$http', '$localStorage', '__env',
 	function ($http, $localStorage, __env) {
 
