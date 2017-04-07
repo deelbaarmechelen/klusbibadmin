@@ -22,6 +22,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     tool.listView()
         .fields([
             nga.field('tool_id').isDetailLink(true),
+            nga.field('code').isDetailLink(true),
             nga.field('name').isDetailLink(true),
             nga.field('description'),
             nga.field('category', 'choice')
