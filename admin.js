@@ -54,7 +54,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('type'),
         nga.field('code'),
         nga.field('owner_id'),
-        nga.field('reception_date'),
+        nga.field('reception_date').label('Ontvangen op (JJJJ/MM/DD)'),
         nga.field('serial'),
         nga.field('manufacturing_year')
                     .validation({ minlength: 4, maxlength: 4 }),
@@ -77,7 +77,12 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             nga.field('user_id').isDetailLink(true),
             nga.field('firstname').isDetailLink(true),
             nga.field('lastname'),
-            nga.field('role')
+            nga.field('role', 'choice')
+    		.choices([
+    			{ value: 'admin', label: 'Admin' },
+    			{ value: 'member', label: 'Lid' },
+    			{ value: 'supporter', label: 'Steunlid' },
+    		])
         ]);
     user.creationView().fields([
         nga.field('firstname')
@@ -90,6 +95,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     		.choices([
     			{ value: 'admin', label: 'Admin' },
     			{ value: 'member', label: 'Lid' },
+    			{ value: 'supporter', label: 'Steunlid' },
     	]),
         nga.field('membership_start_date'),
         nga.field('membership_end_date'),
@@ -121,8 +127,18 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     reservation.listView()
         .fields([
             nga.field('reservation_id').isDetailLink(true),
-            nga.field('tool_id'),
-            nga.field('user_id'),
+            nga.field('tool_id', 'reference')
+            	.label('Tool code')
+            	.targetEntity(tool)
+            	.targetField(nga.field('code')),
+            nga.field('user_id', 'reference')
+        		.label('User firstname')
+        		.targetEntity(user)
+        		.targetField(nga.field('firstname')),
+            nga.field('user_id', 'reference')
+        		.label('User lastname')
+        		.targetEntity(user)
+        		.targetField(nga.field('lastname')),
             nga.field('title').isDetailLink(true),
             nga.field('startsAt', 'date'),
             nga.field('endsAt', 'date'),
@@ -135,7 +151,25 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     ]);
     reservation.creationView().fields([
         nga.field('tool_id'),
+        nga.field('tool_id', 'reference')
+    		.label('Tool code')
+    		.targetEntity(tool)
+    		.targetField(nga.field('code'))
+    		.sortField('code')
+    		.sortDir('ASC'),
         nga.field('user_id'),
+        nga.field('user_id', 'reference')
+			.label('User firstname')
+			.targetEntity(user)
+			.targetField(nga.field('firstname'))
+			.sortField('firstname')
+			.sortDir('ASC'),
+		nga.field('user_id', 'reference')
+			.label('User lastname')
+			.targetEntity(user)
+			.targetField(nga.field('lastname'))
+			.sortField('lastname')
+			.sortDir('DESC'),
         nga.field('title'),
         nga.field('startsAt'),
         nga.field('endsAt'),
