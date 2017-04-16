@@ -71,7 +71,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             tool.creationView().fields());
     admin.addEntity(tool)
 
-    var user = nga.entity('users').identifier(nga.field('user_id'));; // the API endpoint for users will be '/api/public/tools/:id
+    var user = nga.entity('users').identifier(nga.field('id'));; // the API endpoint for users will be '/api/public/tools/:id
     user.listView()
         .fields([
             nga.field('user_id').isDetailLink(true),
@@ -85,6 +85,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     		])
         ]);
     user.creationView().fields([
+        nga.field('user_id'),
         nga.field('firstname')
             .validation({ required: true, minlength: 2, maxlength: 20 }),
         nga.field('lastname')
@@ -106,9 +107,10 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
        		nga.field('custom_action')
        		.label('Paswoord reset')
        		.template('<reset-password post="entry"></reset-password>'),
-            nga.field('user_id').editable(false),
+            nga.field('id').editable(false),
             user.creationView().fields());
     user.showView().fields([
+        nga.field('user_id'),
         nga.field('firstname'),
         nga.field('lastname'),
         nga.field('role'),
