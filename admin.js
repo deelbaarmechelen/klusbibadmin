@@ -21,10 +21,10 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     	.identifier(nga.field('tool_id')); // the API endpoint for tools will be '__env.apiUrl/tools/:id
     tool.listView()
         .fields([
-            nga.field('tool_id').isDetailLink(true),
             nga.field('code').isDetailLink(true),
             nga.field('name').isDetailLink(true),
-            nga.field('description'),
+            nga.field('brand'),
+            nga.field('type'),
             nga.field('category', 'choice')
         	.choices([
         		{ value: 'general', label: 'Algemeen' },
@@ -52,7 +52,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         ]),
         nga.field('brand'),
         nga.field('type'),
-        nga.field('code'),
+        nga.field('code').defaultValue('not assigned'),
         nga.field('owner_id'),
         nga.field('reception_date').label('Ontvangen op (JJJJ/MM/DD)'),
         nga.field('serial'),
