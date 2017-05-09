@@ -82,10 +82,22 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     			{ value: 'admin', label: 'Admin' },
     			{ value: 'member', label: 'Lid' },
     			{ value: 'supporter', label: 'Steunlid' },
-    		])
+    		]),
+            nga.field('state', 'choice')
+    		.choices([
+    			{ value: 'ACTIVE', label: 'Actief' },
+    			{ value: 'DISABLED', label: 'Inactief' },
+    			{ value: 'DELETED', label: 'Verwijdert' },
+    		]),
         ]);
     user.creationView().fields([
         nga.field('user_id'),
+        nga.field('state', 'choice')
+		.choices([
+			{ value: 'ACTIVE', label: 'Actief' },
+			{ value: 'DISABLED', label: 'Inactief' },
+			{ value: 'DELETED', label: 'Verwijdert' },
+		]),
         nga.field('firstname')
             .validation({ required: true, minlength: 2, maxlength: 20 }),
         nga.field('lastname')
@@ -98,8 +110,14 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     			{ value: 'member', label: 'Lid' },
     			{ value: 'supporter', label: 'Steunlid' },
     	]),
-        nga.field('membership_start_date'),
-        nga.field('membership_end_date'),
+        nga.field('membership_start_date').label('Start lidmaatschap (JJJJ/MM/DD)'),
+        nga.field('membership_end_date').label('Einde lidmaatschap (JJJJ/MM/DD)'),
+        nga.field('birth_date').label('Geboortedatum (JJJJ/MM/DD)'),
+        nga.field('address').label('Adres'),
+        nga.field('postal_code').label('Postcode'),
+        nga.field('city').label('Stad'),
+        nga.field('phone').label('Telefoon'),
+        nga.field('mobile').label('GSM'),
     ]);
     user.editionView()
     	.title('Edit user "{{ entry.values.firstname }} {{ entry.values.lastname }}"')
@@ -110,9 +128,30 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             user.creationView().fields());
     user.showView().fields([
         nga.field('user_id'),
+        nga.field('state', 'choice')
+		.choices([
+			{ value: 'ACTIVE', label: 'Actief' },
+			{ value: 'DISABLED', label: 'Inactief' },
+			{ value: 'DELETED', label: 'Verwijdert' },
+		]),
         nga.field('firstname'),
         nga.field('lastname'),
-        nga.field('role'),
+        nga.field('role', 'choice')
+		.choices([
+			{ value: 'admin', label: 'Admin' },
+			{ value: 'member', label: 'Lid' },
+			{ value: 'supporter', label: 'Steunlid' },
+			]),
+        nga.field('membership_start_date').label('Start lidmaatschap (JJJJ/MM/DD)'),
+        nga.field('membership_end_date').label('Einde lidmaatschap (JJJJ/MM/DD)'),
+        nga.field('birth_date').label('Geboortedatum (JJJJ/MM/DD)'),
+        nga.field('address').label('Adres'),
+        nga.field('postal_code').label('Postcode'),
+        nga.field('city').label('Stad'),
+        nga.field('phone').label('Telefoon'),
+        nga.field('mobile').label('GSM'),
+        nga.field('created_at.date').label('Aangemaakt op'),
+        nga.field('updated_at.date').label('Laatste wijziging'),
         nga.field('reservations', 'referenced_list')
             .targetEntity(nga.entity('reservations'))
             .targetReferenceField('user_id')
