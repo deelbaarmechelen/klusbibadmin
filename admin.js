@@ -35,7 +35,10 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         		{ value: 'wood', label: 'Schrijnwerk' },
         		{ value: 'garden', label: 'Tuin' },
         	])
-        ]);
+        ])
+        .sortField('code')
+    	.sortDir('ASC')
+    	.perPage('30');
     tool.creationView().fields([
         nga.field('name')
             .validation({ required: true, minlength: 2, maxlength: 50 }),
@@ -74,9 +77,9 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     var user = nga.entity('users').identifier(nga.field('user_id'));; // the API endpoint for users will be '/api/public/tools/:id
     user.listView()
         .fields([
-            nga.field('user_id').isDetailLink(true),
-            nga.field('firstname').isDetailLink(true),
-            nga.field('lastname'),
+            nga.field('user_id').label('Lidnummer').isDetailLink(true),
+            nga.field('firstname').label('Voornaam').isDetailLink(true),
+            nga.field('lastname').label('Naam'),
             nga.field('role', 'choice')
     		.choices([
     			{ value: 'admin', label: 'Admin' },
@@ -89,7 +92,31 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     			{ value: 'DISABLED', label: 'Inactief' },
     			{ value: 'DELETED', label: 'Verwijdert' },
     		]),
-        ]);
+    	])
+    	.sortField('user_id')
+    	.sortDir('ASC')
+    	.perPage('30')
+    	.listActions(['show', 'edit'])
+    	.exportFields([
+    		nga.field('user_id', 'number').label('lidnummer'),
+    		nga.field('firstname').label('Voornaam'),
+    		nga.field('lastname').label('Naam'),
+    		nga.field('role').label('role'),
+    		nga.field('state').label('status'),
+    		nga.field('membership_start_date').label('lidmaatschap start'),
+    		nga.field('membership_end_date').label('lidmaatschap einde'),
+            nga.field('birth_date').label('Geboortedatum'),
+            nga.field('address').label('Adres'),
+            nga.field('postal_code').label('Postcode'),
+            nga.field('city').label('Stad'),
+            nga.field('phone').label('Telefoon'),
+            nga.field('mobile').label('GSM'),
+         ])
+         .exportOptions({
+        	quotes: true,
+        	delimiter: ';'
+         });
+
     user.creationView().fields([
         nga.field('user_id'),
         nga.field('state', 'choice')
