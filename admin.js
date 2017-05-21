@@ -17,73 +17,6 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     var admin = nga.application('Klusbib Admin')
     .baseApiUrl(__env.apiUrl + '/'); // main API endpoint
 
-    var tool = nga.entity('tools')
-    	.identifier(nga.field('tool_id')); // the API endpoint for tools will be '__env.apiUrl/tools/:id
-    tool.listView()
-        .fields([
-            nga.field('code').isDetailLink(true),
-            nga.field('name').isDetailLink(true),
-            nga.field('brand'),
-            nga.field('type'),
-            nga.field('category', 'choice')
-        	.choices([
-        		{ value: 'general', label: 'Algemeen' },
-        		{ value: 'car', label: 'Auto' },
-        		{ value: 'construction', label: 'Bouw' },
-        		{ value: 'electricity', label: 'Elektriciteit' },
-        		{ value: 'sanitary', label: 'Sanitair' },
-        		{ value: 'wood', label: 'Schrijnwerk' },
-        		{ value: 'garden', label: 'Tuin' },
-        	])
-        ])
-        .sortField('code')
-    	.sortDir('ASC')
-    	.perPage('30');
-    tool.creationView().fields([
-        nga.field('name')
-            .validation({ required: true, minlength: 2, maxlength: 50 }),
-        nga.field('description'),
-        nga.field('category', 'choice')
-        	.choices([
-        		{ value: 'general', label: 'Algemeen' },
-        		{ value: 'car', label: 'Auto' },
-        		{ value: 'construction', label: 'Bouw' },
-        		{ value: 'electricity', label: 'Elektriciteit' },
-        		{ value: 'sanitary', label: 'Sanitair' },
-        		{ value: 'wood', label: 'Schrijnwerk' },
-        		{ value: 'garden', label: 'Tuin' },
-        ]),
-        nga.field('brand').validation({ required: false, maxlength: 20 }),
-        nga.field('type').validation({ required: false, maxlength: 20 }),
-        nga.field('code').defaultValue('not assigned').validation({ required: false, maxlength: 20 }),
-        nga.field('owner_id'),
-        nga.field('reception_date').label('Ontvangen op (JJJJ/MM/DD)'),
-        nga.field('serial').validation({ required: false, maxlength: 50 }),
-        nga.field('manufacturing_year')
-                    .validation({ minlength: 4, maxlength: 4 }),
-        nga.field('manufacturer_url').validation({ required: false, maxlength: 255 }),
-        nga.field('img').validation({ required: false, maxlength: 255 }),
-        nga.field('doc_url').validation({ required: false, maxlength: 255 }),
-        nga.field('replacement_value'),
-        nga.field('experience_level', 'choice').choices([
-    		{ value: 'JUNIOR', label: 'Beginner' },
-    		{ value: 'MEDIOR', label: 'Gemiddeld' },
-    		{ value: 'SENIOR', label: 'Ervaren' }
-    		]).label('Vereiste ervaring'),
-        nga.field('safety_risk', 'choice').choices([
-    		{ value: 'LOW', label: 'Laag' },
-    		{ value: 'MEDIUM', label: 'Gemiddeld' },
-    		{ value: 'HIGH', label: 'Hoog' }
-    		]).label('Veiligheidsrisico')
-    ]);
-    tool.editionView().fields(
-            nga.field('tool_id').editable(false),
-//       		nga.field('custom_action')
-//       		.label('Reserveer')
-//       		.template('<button post="entry"></button>'),
-            tool.creationView().fields());
-    admin.addEntity(tool)
-
     var user = nga.entity('users').identifier(nga.field('user_id'));; // the API endpoint for users will be '/api/public/tools/:id
     user.listView()
         .fields([
@@ -95,18 +28,23 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     			{ value: 'admin', label: 'Admin' },
     			{ value: 'member', label: 'Lid' },
     			{ value: 'supporter', label: 'Steunlid' },
-    		]),
+    		]).label('Rol'),
             nga.field('state', 'choice')
     		.choices([
     			{ value: 'ACTIVE', label: 'Actief' },
     			{ value: 'DISABLED', label: 'Inactief' },
     			{ value: 'DELETED', label: 'Verwijdert' },
-    		]),
+    		]).label('Status'),
     	])
     	.sortField('user_id')
     	.sortDir('ASC')
     	.perPage('30')
-    	.listActions(['show', 'edit'])
+    	.listActions([
+    '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
+    '</ma-edit-button>',
+    '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
+    '</ma-delete-button>'])
+//    	.listActions(['show', 'edit'])
     	.exportFields([
     		nga.field('user_id', 'number').label('lidnummer'),
     		nga.field('firstname').label('Voornaam'),
@@ -200,6 +138,80 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 
     admin.addEntity(user)
 
+    var tool = nga.entity('tools')
+    	.identifier(nga.field('tool_id')); // the API endpoint for tools will be '__env.apiUrl/tools/:id
+    tool.listView()
+        .fields([
+            nga.field('code').isDetailLink(true),
+            nga.field('name').label('Naam').isDetailLink(true),
+            nga.field('brand').label('Merk'),
+            nga.field('type').label('Type'),
+            nga.field('category', 'choice')
+        	.choices([
+        		{ value: 'general', label: 'Algemeen' },
+        		{ value: 'car', label: 'Auto' },
+        		{ value: 'construction', label: 'Bouw' },
+        		{ value: 'electricity', label: 'Elektriciteit' },
+        		{ value: 'sanitary', label: 'Sanitair' },
+        		{ value: 'wood', label: 'Schrijnwerk' },
+        		{ value: 'garden', label: 'Tuin' },
+        	]).label('Categorie')
+        ])
+        .sortField('code')
+    	.sortDir('ASC')
+    	.perPage('30');
+    tool.creationView().fields([
+        nga.field('name').label('Naam')
+            .validation({ required: true, minlength: 2, maxlength: 50 }),
+        nga.field('description').label('Beschrijving'),
+        nga.field('category', 'choice')
+        	.choices([
+        		{ value: 'general', label: 'Algemeen' },
+        		{ value: 'car', label: 'Auto' },
+        		{ value: 'construction', label: 'Bouw' },
+        		{ value: 'electricity', label: 'Elektriciteit' },
+        		{ value: 'sanitary', label: 'Sanitair' },
+        		{ value: 'wood', label: 'Schrijnwerk' },
+        		{ value: 'garden', label: 'Tuin' },
+        ]).label('Categorie'),
+        nga.field('brand').label('Merk').validation({ required: false, maxlength: 20 }),
+        nga.field('type').validation({ required: false, maxlength: 20 }),
+        nga.field('code').defaultValue('not assigned').validation({ required: false, maxlength: 20 }),
+        nga.field('owner_id', 'reference')
+		.targetEntity(user)
+		.targetField(nga.field('user_id').map(function fullname(value, entry) {
+//	          return value + '(' + entry.values.subValue + ')';
+	          return value + ' (' + entry.firstname + ' ' + entry.lastname + ')';
+	      }))
+        .label('Eigenaar'),
+
+        nga.field('reception_date').label('Ontvangen op (JJJJ/MM/DD)'),
+        nga.field('serial').label('Serienummer').validation({ required: false, maxlength: 50 }),
+        nga.field('manufacturing_year').label('Fabrikatie jaar')
+                    .validation({ minlength: 4, maxlength: 4 }),
+        nga.field('manufacturer_url').label('Website fabrikant').validation({ required: false, maxlength: 255 }),
+        nga.field('img').label('Url afbeelding').validation({ required: false, maxlength: 255 }),
+        nga.field('doc_url').label('Url handleiding').validation({ required: false, maxlength: 255 }),
+        nga.field('replacement_value').label('Vervangwaarde'),
+        nga.field('experience_level', 'choice').choices([
+    		{ value: 'JUNIOR', label: 'Beginner' },
+    		{ value: 'MEDIOR', label: 'Gemiddeld' },
+    		{ value: 'SENIOR', label: 'Ervaren' }
+    		]).label('Vereiste ervaring'),
+        nga.field('safety_risk', 'choice').choices([
+    		{ value: 'LOW', label: 'Laag' },
+    		{ value: 'MEDIUM', label: 'Gemiddeld' },
+    		{ value: 'HIGH', label: 'Hoog' }
+    		]).label('Veiligheidsrisico')
+    ]);
+    tool.editionView().fields(
+            nga.field('tool_id').editable(false),
+//       		nga.field('custom_action')
+//       		.label('Reserveer')
+//       		.template('<button post="entry"></button>'),
+            tool.creationView().fields());
+    admin.addEntity(tool)
+    
     var reservation = nga.entity('reservations').identifier(nga.field('reservation_id'));;
     reservation.listView()
         .fields([
