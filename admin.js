@@ -65,8 +65,16 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('img').validation({ required: false, maxlength: 255 }),
         nga.field('doc_url').validation({ required: false, maxlength: 255 }),
         nga.field('replacement_value'),
-        nga.field('experience_level').validation({ required: false, maxlength: 20 }),
-        nga.field('safety_risk').validation({ required: false, maxlength: 20 }),
+        nga.field('experience_level', 'choice').choices([
+    		{ value: 'JUNIOR', label: 'Beginner' },
+    		{ value: 'MEDIOR', label: 'Gemiddeld' },
+    		{ value: 'SENIOR', label: 'Ervaren' }
+    		]).label('Vereiste ervaring'),
+        nga.field('safety_risk', 'choice').choices([
+    		{ value: 'LOW', label: 'Laag' },
+    		{ value: 'MEDIUM', label: 'Gemiddeld' },
+    		{ value: 'HIGH', label: 'Hoog' }
+    		]).label('Veiligheidsrisico')
     ]);
     tool.editionView().fields(
             nga.field('tool_id').editable(false),
