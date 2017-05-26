@@ -169,7 +169,15 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         ])
         .sortField('code')
     	.sortDir('ASC')
-    	.perPage('30');
+    	.perPage('30')
+    	.listActions([
+  	    '<ma-show-button entry="entry" entity="entity" label="Bekijken" size="xs">' +
+  	    '</ma-show-button>',
+    '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
+    '</ma-edit-button>',
+    '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
+    '</ma-delete-button>']);
+    
     tool.creationView().fields([
         nga.field('name').label('Naam')
             .validation({ required: true, minlength: 2, maxlength: 50 }),
@@ -190,7 +198,6 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('owner_id', 'reference')
 		.targetEntity(user)
 		.targetField(nga.field('user_id').map(function fullname(value, entry) {
-//	          return value + '(' + entry.values.subValue + ')';
 	          return value + ' (' + entry.firstname + ' ' + entry.lastname + ')';
 	      }))
         .label('Eigenaar'),
@@ -220,6 +227,26 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 //       		.label('Reserveer')
 //       		.template('<button post="entry"></button>'),
             tool.creationView().fields());
+
+    tool.showView().fields([
+        nga.field('tool_id'),
+        tool.creationView().fields(),
+    nga.field('reservations', 'embedded_list') // Define a 1-N relationship with the (embedded) comment entity
+	.targetEntity(reservation)
+	.targetFields([ // which comment fields to display in the datagrid / form
+		nga.field('reservation_id'),
+		nga.field('tool_id'),
+//		nga.field('tool_id', 'reference')
+//    		.label('Tool code')
+//    		.targetEntity(tool)
+//    		.targetField(nga.field('code')),
+		nga.field('title'),
+		nga.field('startsAt'),
+		nga.field('endsAt'),
+		nga.field('type')
+		]),
+		]);
+
     admin.addEntity(tool)
     
     reservation.listView()
