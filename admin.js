@@ -17,7 +17,10 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     var admin = nga.application('Klusbib Admin')
     .baseApiUrl(__env.apiUrl + '/'); // main API endpoint
 
-    var user = nga.entity('users').identifier(nga.field('user_id'));; // the API endpoint for users will be '/api/public/tools/:id
+    var user = nga.entity('users').identifier(nga.field('user_id')); // the API endpoint for users will be '/api/public/users/:id
+    var tool = nga.entity('tools').identifier(nga.field('tool_id')); // the API endpoint for tools will be '__env.apiUrl/tools/:id
+    var reservation = nga.entity('reservations').identifier(nga.field('reservation_id'));
+
     user.listView()
         .fields([
             nga.field('user_id').label('Lidnummer').isDetailLink(true),
@@ -40,6 +43,8 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     	.sortDir('ASC')
     	.perPage('30')
     	.listActions([
+  	    '<ma-show-button entry="entry" entity="entity" label="Bekijken" size="xs">' +
+  	    '</ma-show-button>',
     '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
     '</ma-edit-button>',
     '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
@@ -127,19 +132,24 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('mobile').label('GSM'),
         nga.field('created_at.date').label('Aangemaakt op'),
         nga.field('updated_at.date').label('Laatste wijziging'),
-        nga.field('reservations', 'referenced_list')
-            .targetEntity(nga.entity('reservations'))
-            .targetReferenceField('user_id')
-            .targetFields([
-                nga.field('title'),
-                nga.field('type')
-            ])
+        nga.field('reservations', 'embedded_list') // Define a 1-N relationship with the (embedded) comment entity
+        	.targetEntity(reservation)
+        	.targetFields([ // which comment fields to display in the datagrid / form
+        		nga.field('reservation_id'),
+        		nga.field('tool_id'),
+//        		nga.field('tool_id', 'reference')
+//            		.label('Tool code')
+//            		.targetEntity(tool)
+//            		.targetField(nga.field('code')),
+        		nga.field('title'),
+        		nga.field('startsAt'),
+        		nga.field('endsAt'),
+        		nga.field('type')
+        		]),
     ]);
 
     admin.addEntity(user)
 
-    var tool = nga.entity('tools')
-    	.identifier(nga.field('tool_id')); // the API endpoint for tools will be '__env.apiUrl/tools/:id
     tool.listView()
         .fields([
             nga.field('code').isDetailLink(true),
@@ -212,7 +222,6 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             tool.creationView().fields());
     admin.addEntity(tool)
     
-    var reservation = nga.entity('reservations').identifier(nga.field('reservation_id'));;
     reservation.listView()
         .fields([
             nga.field('reservation_id').isDetailLink(true),
