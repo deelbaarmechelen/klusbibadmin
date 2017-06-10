@@ -7,9 +7,111 @@ if(window){
 
 var myApp = angular.module('myApp', [
 	'ng-admin',
-	'ngStorage'
+	'ngStorage',
+	'pascalprecht.translate'
 ]);
 
+
+myApp.config(function ($translateProvider) {
+    $translateProvider.translations('en', {
+        'BACK': 'Back',
+        'DELETE': 'Delete',
+        'CREATE': 'Create',
+        'EDIT': 'Edit',
+        'EXPORT': 'Export',
+        'ADD_FILTER': 'Add filter',
+        'SEE_RELATED': 'See all related {{ entityName }}',
+        'LIST': 'List',
+        'SHOW': 'Show',
+        'SAVE': 'Save',
+        'N_SELECTED': '{{ length }} Selected',
+        'ARE_YOU_SURE': 'Are you sure?',
+        'YES': 'Yes',
+        'NO': 'No',
+        'FILTER_VALUES': 'Filter values',
+        'CLOSE': 'Close',
+        'CLEAR': 'Clear',
+        'CURRENT': 'Current',
+        'REMOVE': 'Remove',
+        'ADD_NEW': 'Add new {{ name }}',
+        'BROWSE': 'Browse',
+        'N_COMPLETE': '{{ progress }}% Complete',
+        'CREATE_NEW': 'Create new',
+        'SUBMIT': 'Submit',
+        'SAVE_CHANGES': 'Save changes',
+        'BATCH_DELETE_SUCCESS': 'Elements successfully deleted',
+        'DELETE_SUCCESS': 'Element successfully deleted',
+        'ERROR_MESSAGE': 'Oops, an error occurred (code: {{ status }})',
+        'INVALID_FORM': 'Invalid form',
+        'CREATION_SUCCESS': 'Element successfully created',
+        'EDITION_SUCCESS': 'Changes successfully saved',
+        'ACTIONS': 'Actions',
+        'PAGINATION': '<strong>{{ begin }}</strong> - <strong>{{ end }}</strong> of <strong>{{ total }}</strong>',
+        'NO_PAGINATION': 'No record found',
+        'PREVIOUS': '« Prev',
+        'NEXT': 'Next »',
+        'DETAIL': 'Detail',
+        'STATE_CHANGE_ERROR': 'State change error: {{ message }}',
+        'STATE_FORBIDDEN_ERROR': 'A server 403 error occured: {{ message }}',
+        'NOT_FOUND': 'Not Found',
+        'NOT_FOUND_DETAILS': 'The page you are looking for cannot be found. Take a break before trying again.',
+    });
+    $translateProvider.translations('nl', {
+        'BACK': 'Terug',
+        'DELETE': 'Verwijdeen',
+        'CREATE': 'Aanmaken',
+        'EDIT': 'Bewerken',
+        'EXPORT': 'Exporteren',
+        'ADD_FILTER': 'Filter toevoegen',
+        'SEE_RELATED': 'See all related {{ entityName }}',
+        'LIST': 'Lijst',
+        'SHOW': 'Bekijken',
+        'SAVE': 'Opslaan',
+        'N_SELECTED': '{{ length }} Geselecteerd',
+        'ARE_YOU_SURE': 'Ben je zeker?',
+        'YES': 'Ja',
+        'NO': 'Nee',
+        'FILTER_VALUES': 'Filter values',
+        'CLOSE': 'Sluiten',
+        'CLEAR': 'Clear',
+        'CURRENT': 'Huidige',
+        'REMOVE': 'Verwijder',
+        'ADD_NEW': 'Add new {{ name }}',
+        'BROWSE': 'Browse',
+        'N_COMPLETE': '{{ progress }}% Complete',
+        'CREATE_NEW': 'Toevoegen nieuwe',
+        'SUBMIT': 'Submit',
+        'SAVE_CHANGES': 'Wijzigingen opslaan',
+        'BATCH_DELETE_SUCCESS': 'Elementen succesvol verwijderd',
+        'DELETE_SUCCESS': 'Element succesvol verwijderd',
+        'ERROR_MESSAGE': 'Oeps, er was een fout (code: {{ status }})',
+        'INVALID_FORM': 'Ongeldig formulier',
+        'CREATION_SUCCESS': 'Element succesvol aangemaakt',
+        'EDITION_SUCCESS': 'Wijzigingen succesvol opgeslagen',
+        'ACTIONS': 'Acties',
+        'PAGINATION': '<strong>{{ begin }}</strong> - <strong>{{ end }}</strong> of <strong>{{ total }}</strong>',
+        'NO_PAGINATION': 'Geen record gevonden',
+        'PREVIOUS': '« Vorig',
+        'NEXT': 'Volg. »',
+        'DETAIL': 'Detail',
+        'STATE_CHANGE_ERROR': 'State change error: {{ message }}',
+        'STATE_FORBIDDEN_ERROR': 'A server 403 error occured: {{ message }}',
+        'NOT_FOUND': 'Niet Gevonden',
+        'NOT_FOUND_DETAILS': 'We kunnen de gevraagde pagina niet vinden.',
+        'TOOLS': 'Materialen',
+        'USERS': 'Gebruikers',
+        'RESERVATIONS': 'Reservaties',
+        'CONSUMERS': 'Verbruiksmaterialen',
+        'TOOL': 'Materiaal',
+        'USER': 'Gebruiker',
+        'RESERVATION': 'Reservatie',
+        'CONSUMER': 'Verbruiksmateriaal'
+    });
+
+	  $translateProvider.preferredLanguage('nl');
+});
+
+	
 //Register environment in AngularJS as constant
 myApp.constant('__env', env);
 
@@ -148,7 +250,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         		]),
     ]);
 
-    admin.addEntity(user)
+    admin.addEntity(user).title('USERS');
 
     tool.listView()
         .fields([
@@ -366,12 +468,12 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 	admin.addEntity(consumer);
 
 	admin.menu(nga.menu()
-	  .addChild(nga.menu(user).title('Gebruikers')
+	  .addChild(nga.menu(user).title('USERS')
 //			  .addChild(nga.menu().title('Paswoord reset'))
 			  )
-	  .addChild(nga.menu(tool).title('Materiaal'))
-	  .addChild(nga.menu(reservation).title('Reservaties'))
-	  .addChild(nga.menu(consumer).title('Verbruiksmaterialen'))
+	  .addChild(nga.menu(tool).title('TOOLS'))
+	  .addChild(nga.menu(reservation).title('RESERVATIONS'))
+	  .addChild(nga.menu(consumer).title('CONSUMERS'))
 			  //.icon('<span class="glyphicon glyphicon-tags"></span>'))
 //	  .addChild(nga.menu()
 //	            .title('Logout')
