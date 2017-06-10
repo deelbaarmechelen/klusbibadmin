@@ -475,13 +475,12 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 	  .addChild(nga.menu(reservation).title('RESERVATIONS'))
 	  .addChild(nga.menu(consumer).title('CONSUMERS'))
 			  //.icon('<span class="glyphicon glyphicon-tags"></span>'))
-//	  .addChild(nga.menu()
-//	            .title('Logout')
-//	            .link('/login')
-//	            .active(function(path) {
-//	                return path.indexOf('//login') === 0;
-//	            })
-//	        )
+      .addChild(nga.menu().template(`
+        <a href="/login.html">
+            <span class="glyphicon glyphicon-user"></span>
+            Inloggen/Uitloggen
+        </a>`
+      ))
 	);
 
     nga.configure(admin);
