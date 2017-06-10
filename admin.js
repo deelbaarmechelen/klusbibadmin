@@ -36,7 +36,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     		.choices([
     			{ value: 'ACTIVE', label: 'Actief' },
     			{ value: 'DISABLED', label: 'Inactief' },
-    			{ value: 'DELETED', label: 'Verwijdert' },
+    			{ value: 'DELETED', label: 'Verwijderd' },
     		]).label('Status'),
     	])
     	.sortField('user_id')
@@ -176,8 +176,32 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
     '</ma-edit-button>',
     '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
-    '</ma-delete-button>']);
-    
+    '</ma-delete-button>'])
+    	.exportFields([
+    		nga.field('tool_id').label('Tool id'),
+    		nga.field('name').label('Naam'),
+    		nga.field('description').label('Beschrijving'),
+    		nga.field('category').label('Categorie'),
+    		nga.field('brand').label('Merk'),
+    		nga.field('type').label('Type'),
+    		nga.field('code').label('Code'),
+            nga.field('owner_id').label('ID Eigenaar'),
+            nga.field('reception_date').label('Ontvangen op'),
+            nga.field('serial').label('Serienummer'),
+            nga.field('manufacturing_year').label('Fabrikatie jaar'),
+            nga.field('manufacturing_url').label('Fabrikant url'),
+            nga.field('img').label('Afbeelding url'),
+            nga.field('doc_url').label('Documentatie url'),
+            nga.field('replacement_value').label('Vervangwaarde'),
+            nga.field('experience_level').label('Ervaring'),
+            nga.field('safety_risk').label('Veiligheidsrisico'),
+         ])
+         .exportOptions({
+        	quotes: true,
+        	delimiter: ';'
+         });
+
+	
     tool.creationView().fields([
         nga.field('name').label('Naam')
             .validation({ required: true, minlength: 2, maxlength: 50 }),
