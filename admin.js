@@ -178,7 +178,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 		.choices([
 			{ value: 'ACTIVE', label: 'Actief' },
 			{ value: 'DISABLED', label: 'Inactief' },
-			{ value: 'DELETED', label: 'Verwijdert' },
+			{ value: 'DELETED', label: 'Verwijderd' },
 		]),
         nga.field('firstname')
             .validation({ required: true, minlength: 2, maxlength: 20 }),
@@ -214,7 +214,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 		.choices([
 			{ value: 'ACTIVE', label: 'Actief' },
 			{ value: 'DISABLED', label: 'Inactief' },
-			{ value: 'DELETED', label: 'Verwijdert' },
+			{ value: 'DELETED', label: 'Verwijderd' },
 		]),
         nga.field('firstname'),
         nga.field('lastname'),
