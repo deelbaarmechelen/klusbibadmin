@@ -209,7 +209,16 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
        		nga.field('custom_action')
        		.label('Paswoord reset')
        		.template('<reset-password post="entry"></reset-password>'),
-            user.creationView().fields());
+            user.creationView().fields())
+        .onSubmitError(['error', 'progression', 'notification', function(error, progression, notification) {
+        	// stop the progress bar
+        	progression.done();
+        	// add a notification
+        	notification.log(`Some values are invalid: ` + error.data, { addnCls: 'humane-flatty-error' });
+        	// cancel the default action (default error messages)
+        	return false;
+        }]);
+
     user.showView().fields([
         nga.field('user_id'),
         nga.field('state', 'choice')
