@@ -147,10 +147,10 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     	.listActions([
   	    '<ma-show-button entry="entry" entity="entity" label="Bekijken" size="xs">' +
   	    '</ma-show-button>',
-    '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
-    '</ma-edit-button>',
-    '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
-    '</ma-delete-button>'])
+  	    '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
+  	    '</ma-edit-button>',
+  	    '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
+  	    '</ma-delete-button>'])
 //    	.listActions(['show', 'edit'])
     	.exportFields([
     		nga.field('user_id', 'number').label('lidnummer'),
@@ -166,6 +166,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             nga.field('city').label('Stad'),
             nga.field('phone').label('Telefoon'),
             nga.field('mobile').label('GSM'),
+            nga.field('registration_number').label('Rijksregistratie'),
          ])
          .exportOptions({
         	quotes: true,
@@ -200,6 +201,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('city').label('Stad').validation({ required: false, maxlength: 50 }),
         nga.field('phone').label('Telefoon').validation({ required: false, maxlength: 15 }),
         nga.field('mobile').label('GSM').validation({ required: false, maxlength: 15 }),
+        nga.field('registration_number').label('Rijksregistratie').validation({ required: false, maxlength: 15 }),
     ]);
     user.editionView()
     	.title('Edit user "{{ entry.values.firstname }} {{ entry.values.lastname }}"')
@@ -232,11 +234,12 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('city').label('Stad'),
         nga.field('phone').label('Telefoon'),
         nga.field('mobile').label('GSM'),
+        nga.field('registration_number').label('Rijksregistratie'),
         nga.field('created_at.date').label('Aangemaakt op'),
         nga.field('updated_at.date').label('Laatste wijziging'),
         nga.field('reservations', 'embedded_list') // Define a 1-N relationship with the (embedded) comment entity
         	.targetEntity(reservation)
-        	.targetFields([ // which comment fields to display in the datagrid / form
+        	.targetFields([ // which reservation fields to display in the datagrid / form
         		nga.field('reservation_id'),
         		nga.field('tool_id'),
 //        		nga.field('tool_id', 'reference')
@@ -275,10 +278,10 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     	.listActions([
   	    '<ma-show-button entry="entry" entity="entity" label="Bekijken" size="xs">' +
   	    '</ma-show-button>',
-    '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
-    '</ma-edit-button>',
-    '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
-    '</ma-delete-button>'])
+  	    '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
+  	    '</ma-edit-button>',
+  	    '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
+  	    '</ma-delete-button>'])
     	.exportFields([
     		nga.field('tool_id').label('Tool id'),
     		nga.field('name').label('Naam'),
