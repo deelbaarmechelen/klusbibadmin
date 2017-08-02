@@ -138,6 +138,8 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     		.choices([
     			{ value: 'ACTIVE', label: 'Actief' },
     			{ value: 'DISABLED', label: 'Inactief' },
+    			{ value: 'CONFIRM_EMAIL', label: 'Email verificatie' },
+    			{ value: 'CHECK_PAYMENT', label: 'Betaling nakijken' },
     			{ value: 'DELETED', label: 'Verwijderd' },
     		]).label('Status'),
     	])
@@ -160,6 +162,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     		nga.field('state').label('status'),
     		nga.field('membership_start_date').label('lidmaatschap start'),
     		nga.field('membership_end_date').label('lidmaatschap einde'),
+            nga.field('email', 'email'),
             nga.field('birth_date').label('Geboortedatum'),
             nga.field('address').label('Adres'),
             nga.field('postal_code').label('Postcode'),
@@ -167,6 +170,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             nga.field('phone').label('Telefoon'),
             nga.field('mobile').label('GSM'),
             nga.field('registration_number').label('Rijksregistratie'),
+            nga.field('payment_mode').label('Betalingswijze'),
          ])
          .exportOptions({
         	quotes: true,
@@ -179,6 +183,8 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 		.choices([
 			{ value: 'ACTIVE', label: 'Actief' },
 			{ value: 'DISABLED', label: 'Inactief' },
+			{ value: 'CONFIRM_EMAIL', label: 'Email verificatie' },
+			{ value: 'CHECK_PAYMENT', label: 'Betaling nakijken' },
 			{ value: 'DELETED', label: 'Verwijderd' },
 		]),
         nga.field('firstname')
@@ -202,6 +208,13 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('phone').label('Telefoon').validation({ required: false, maxlength: 15 }),
         nga.field('mobile').label('GSM').validation({ required: false, maxlength: 15 }),
         nga.field('registration_number').label('Rijksregistratie').validation({ required: false, maxlength: 15 }),
+        nga.field('payment_mode', 'choice')
+        .choices([
+			{ value: 'CASH', label: 'Cash' },
+			{ value: 'TRANSFER', label: 'Overschrijving' },
+			{ value: 'PAYCONIQ', label: 'Payconiq' },
+			])
+        .label('Betalingswijze').validation({ required: false, maxlength: 20 }),
     ]);
     user.editionView()
     	.title('Edit user "{{ entry.values.firstname }} {{ entry.values.lastname }}"')
@@ -225,6 +238,8 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 		.choices([
 			{ value: 'ACTIVE', label: 'Actief' },
 			{ value: 'DISABLED', label: 'Inactief' },
+			{ value: 'CONFIRM_EMAIL', label: 'Email verificatie' },
+			{ value: 'CHECK_PAYMENT', label: 'Betaling nakijken' },
 			{ value: 'DELETED', label: 'Verwijderd' },
 		]),
         nga.field('firstname'),
@@ -244,6 +259,13 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
         nga.field('phone').label('Telefoon'),
         nga.field('mobile').label('GSM'),
         nga.field('registration_number').label('Rijksregistratie'),
+        nga.field('payment_mode', 'choice')
+        .choices([
+			{ value: 'CASH', label: 'Cash' },
+			{ value: 'TRANSFER', label: 'Overschrijving' },
+			{ value: 'PAYCONIQ', label: 'Payconiq' },
+			])
+		.label('Betalingswijze'),
         nga.field('created_at.date').label('Aangemaakt op'),
         nga.field('updated_at.date').label('Laatste wijziging'),
         nga.field('reservations', 'embedded_list') // Define a 1-N relationship with the (embedded) comment entity
@@ -523,12 +545,12 @@ myApp.run(function(Restangular, $location, $localStorage) {
 		window.location = "/login.html";
 	}
 
+//	Restangular.setDefaultRequestParams('get', {_perPage: 500});
 	Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params) {
 		  headers = headers || {};
 		  if ($localStorage.token) {
 		      headers.Authorization = 'Bearer ' + $localStorage.token;
 		  }
-		
 		  return { headers: headers };
 		});
 
