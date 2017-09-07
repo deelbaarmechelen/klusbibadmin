@@ -432,7 +432,13 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 				{ value: 'maintenance', label: 'Onderhoud' },
 				{ value: 'reservation', label: 'Reservatie' },
 				{ value: 'loan', label: 'Uitgeleend' },
-		])
+			]),
+			nga.field('state', 'choice')
+			.choices([
+				{ value: 'REQUESTED', label: 'Aangevraagd' },
+				{ value: 'CONFIRMED', label: 'Bevestigd' },
+				{ value: 'CANCELLED', label: 'Annulatie' },
+			])
     ]);
     reservation.creationView().fields([
         nga.field('tool_id'),
@@ -463,6 +469,12 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 				{ value: 'maintenance', label: 'Onderhoud' },
 				{ value: 'reservation', label: 'Reservatie' },
 				{ value: 'loan', label: 'Uitgeleend' },
+		]),
+        nga.field('state', 'choice')
+			.choices([
+				{ value: 'REQUESTED', label: 'Aangevraagd' },
+				{ value: 'CONFIRMED', label: 'Bevestigd' },
+				{ value: 'CANCELLED', label: 'Annulatie' },
 		])
     ]);
     reservation.editionView().fields(reservation.creationView().fields());
@@ -474,9 +486,11 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 	    .fields([
 	        nga.field('consumer_id').isDetailLink(true),
 	        nga.field('category'),
-	        nga.field('brand').isDetailLink(true),
-	        nga.field('reference').isDetailLink(true),
-	        nga.field('description')
+//	        nga.field('brand').isDetailLink(true),
+//	        nga.field('reference').isDetailLink(true),
+	        nga.field('description').isDetailLink(true),
+	        nga.field('price'),
+	        nga.field('unit')
 	    ]);
 	consumer.creationView().fields([
 	    nga.field('category'),
