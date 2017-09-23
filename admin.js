@@ -1,18 +1,5 @@
-var env = {};
 
-// Import variables if present (from env.js)
-if(window){  
-  Object.assign(env, window.__env);
-}
-
-var myApp = angular.module('myApp', [
-	'ng-admin',
-	'ngStorage',
-	'pascalprecht.translate'
-]);
-
-
-myApp.config(function ($translateProvider) {
+angular.module('myApp').config(function ($translateProvider) {
     $translateProvider.translations('en', {
         'BACK': 'Back',
         'DELETE': 'Delete',
@@ -112,10 +99,7 @@ myApp.config(function ($translateProvider) {
 });
 
 	
-//Register environment in AngularJS as constant
-myApp.constant('__env', env);
-
-myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
+angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     var admin = nga.application('Klusbib Admin')
     .baseApiUrl(__env.apiUrl + '/'); // main API endpoint
 
@@ -171,6 +155,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
             nga.field('mobile').label('GSM'),
             nga.field('registration_number').label('Rijksregistratie'),
             nga.field('payment_mode').label('Betalingswijze'),
+            nga.field('accept_terms_date').label('Goedkeuring afspraken'),
          ])
          .exportOptions({
         	quotes: true,
@@ -215,6 +200,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 			{ value: 'PAYCONIQ', label: 'Payconiq' },
 			])
         .label('Betalingswijze').validation({ required: false, maxlength: 20 }),
+        nga.field('accept_terms_date').label('Goedkeuring afspraken (JJJJ/MM/DD)'),
     ]);
     user.editionView()
     	.title('Edit user "{{ entry.values.firstname }} {{ entry.values.lastname }}"')
@@ -266,6 +252,7 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
 			{ value: 'PAYCONIQ', label: 'Payconiq' },
 			])
 		.label('Betalingswijze'),
+        nga.field('accept_terms_date').label('Goedkeuring afspraken'),
         nga.field('created_at.date').label('Aangemaakt op'),
         nga.field('updated_at.date').label('Laatste wijziging'),
         nga.field('reservations', 'embedded_list') // Define a 1-N relationship with the (embedded) comment entity
@@ -534,105 +521,6 @@ myApp.config(['NgAdminConfigurationProvider', '__env', function (nga, __env) {
     nga.configure(admin);
 }]);
 
-myApp.config(function ($stateProvider) {
 
-    $stateProvider.state('reset-password', {
-        parent: 'ng-admin',
-        url: '/resetPassword/:id',
-        params: { id: null },
-        controller: resetPwdController,
-        controllerAs: 'controller',
-        template: resetPwdControllerTemplate
-    });
 
-});
-
-myApp.run(function(Restangular, $location, $localStorage) {
-    var islogged = function () {
-        if (!$localStorage.token) {
-             return false;
-        } else {
-        	return true;
-        }
-    }
-	if (!islogged()) {
-		window.location = "/login.html";
-	}
-
-//	Restangular.setDefaultRequestParams('get', {_perPage: 500});
-	Restangular.addFullRequestInterceptor(function(element, operation, what, url, headers, params) {
-		  headers = headers || {};
-		  if ($localStorage.token) {
-		      headers.Authorization = 'Bearer ' + $localStorage.token;
-		  }
-		  return { headers: headers };
-		});
-
-	Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
-	    if(response.status === 401) {
-			window.location = "/login.html";
-	        return false; // error handled
-	    }
-	    return true; // error not handled
-	});
-});
-
-//myApp.directive('reservation', ['$location', function ($location) {
-//    return {
-//        restrict: 'E',
-//        scope: { post: '&' },
-//        link: function (scope) {
-//            scope.send = function () {
-//                $location.path('/reservations/create' + scope.post().values.user_id);
-//            };
-//        },
-//        template: '<a class="btn btn-default" ng-click="send()">Reserveer</a>'
-//    };
-//}]);
-
-myApp.directive('resetPassword', ['$location', function ($location) {
-    return {
-        restrict: 'E',
-        scope: { post: '&' },
-        link: function (scope) {
-            scope.send = function () {
-                $location.path('/resetPassword/' + scope.post().values.user_id);
-            };
-        },
-        template: '<a class="btn btn-default" ng-click="send()">Verander paswoord</a>'
-    };
-}]);
-
-function resetPwdController($scope, $stateParams, notification, $http, $localStorage, __env) {
-    this.userId = $stateParams.id;
-    // notification is the service used to display notifications on the top of the screen
-    this.notification = notification;
-    this.http = $http;
-    this.localStorage = $localStorage;
-    this.apiUrl = __env.apiUrl;
-};
-resetPwdController.inject = ['$scope', '$stateParams', 'notification', '$http', '$localStorage', '__env'];
-resetPwdController.prototype.resetPwd = function() {
-    var data = { password : this.password };
-    var self = this;
-    this.http.put(this.apiUrl + '/users/' + this.userId, data, {
-        headers: {'Authorization': 'Bearer ' + this.localStorage.token}
-    }).then(function() {
-    	self.notification.log('Password successfully updated for ' + self.userId +  '(' + self.password + ')');
-    }, function() {
-    	self.notification.log('Password update failed for ' + self.userId +  '(' + self.password + ')');
-    });
-};
-
-var resetPwdControllerTemplate =
-    '<div class="row"><div class="col-lg-12">' +
-        '<ma-view-actions><ma-back-button></ma-back-button></ma-view-actions>' +
-        '<div class="page-header">' +
-            '<h1>Paswoord reset voor gebruiker met id {{ controller.userId }}</h1>' +
-        '</div>' +
-    '</div></div>' +
-    '<div class="row">' +
-    '<div class="col-lg-5"><input type="text" size="20" ng-model="controller.password" class="form-control" placeholder="[nieuw paswoord]"/></div>' +
-    '<div class="col-lg-2"><a class="btn btn-default" ng-click="controller.resetPwd()">Reset</a></div>' +
-    '</div>';
 
