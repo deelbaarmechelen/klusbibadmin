@@ -342,11 +342,14 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         nga.field('brand').label('Merk').validation({ required: false, maxlength: 20 }),
         nga.field('type').validation({ required: false, maxlength: 20 }),
         nga.field('code').defaultValue('not assigned').validation({ required: false, maxlength: 20 }),
-        nga.field('owner_id', 'reference')
-		.targetEntity(user)
-		.targetField(nga.field('user_id').map(function fullname(value, entry) {
-	          return value + ' (' + entry.firstname + ' ' + entry.lastname + ')';
-	      }))
+        // FIXME: using targetEntity, the target field is sent in requests to API
+        // How to send only the id?
+        //        nga.field('owner_id', 'reference')
+//		.targetEntity(user)
+//		.targetField(nga.field('user_id').map(function fullname(value, entry) {
+//	          return value + ' (' + entry.firstname + ' ' + entry.lastname + ')';
+//	      }))
+      nga.field('owner_id')
         .label('Eigenaar'),
 
         nga.field('reception_date').label('Ontvangen op (JJJJ/MM/DD)'),
