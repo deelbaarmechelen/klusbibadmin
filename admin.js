@@ -462,7 +462,8 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 				{ value: 'REQUESTED', label: 'Aangevraagd' },
 				{ value: 'CONFIRMED', label: 'Bevestigd' },
 				{ value: 'CANCELLED', label: 'Annulatie' },
-		])
+		]),
+        nga.field('comment').label('Opmerking')
     ]);
     reservation.editionView().fields(reservation.creationView().fields());
     admin.addEntity(reservation);
