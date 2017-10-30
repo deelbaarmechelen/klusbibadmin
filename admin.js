@@ -428,6 +428,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 				{ value: 'REQUESTED', label: 'Aangevraagd' },
 				{ value: 'CONFIRMED', label: 'Bevestigd' },
 				{ value: 'CANCELLED', label: 'Annulatie' },
+				{ value: 'CLOSED', label: 'Beëindigd' },
 			])
     ]);
     reservation.creationView().fields([
