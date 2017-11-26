@@ -33,7 +33,10 @@ angular.module('myApp').run(function(Restangular, $location, $localStorage) {
 		  if ($localStorage.token) {
 		      headers.Authorization = 'Bearer ' + $localStorage.token;
 		  }
-		  return { headers: headers };
+	      if (operation == 'getList' && what == 'tools') {
+          	params._all = params._all || 'true';
+		  }
+		  return { headers: headers , params: params };
 		});
 
 	Restangular.setErrorInterceptor(function(response, deferred, responseHandler) {
