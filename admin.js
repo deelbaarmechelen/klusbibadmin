@@ -349,8 +349,8 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 //		.targetField(nga.field('user_id').map(function fullname(value, entry) {
 //	          return value + ' (' + entry.firstname + ' ' + entry.lastname + ')';
 //	      }))
-      nga.field('owner_id')
-        .label('Eigenaar'),
+        nga.field('owner_id')
+        	.label('Eigenaar'),
 
         nga.field('reception_date').label('Ontvangen op (JJJJ/MM/DD)'),
         nga.field('serial').label('Serienummer').validation({ required: false, maxlength: 50 }),
@@ -369,7 +369,18 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
     		{ value: 'LOW', label: 'Laag' },
     		{ value: 'MEDIUM', label: 'Gemiddeld' },
     		{ value: 'HIGH', label: 'Hoog' }
-    		]).label('Veiligheidsrisico')
+    		]).label('Veiligheidsrisico'),
+       	nga.field('state', 'choice').choices([
+    		{ value: 'NEW', label: 'Nieuw' },
+    		{ value: 'READY', label: 'Klaar voor gebruik' },
+    		{ value: 'DISPOSED', label: 'Verwijderd' }
+    		]).label('Status'),
+    	nga.field('visible', 'boolean')
+        .choices([
+            { value: null, label: 'Default' },
+            { value: true, label: 'Ja' },
+            { value: false, label: 'Nee' }
+        ]).label('Zichtbaar?')
     ]);
     tool.editionView().fields(
             nga.field('tool_id').editable(false),
