@@ -198,6 +198,8 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 			{ value: 'CASH', label: 'Cash' },
 			{ value: 'TRANSFER', label: 'Overschrijving' },
 			{ value: 'PAYCONIQ', label: 'Payconiq' },
+            { value: 'OVAM', label: 'OVAM' },
+            { value: 'LETS', label: 'LETS' },
 			])
         .label('Betalingswijze').validation({ required: false, maxlength: 20 }),
         nga.field('accept_terms_date').label('Goedkeuring afspraken (JJJJ/MM/DD)'),
@@ -250,6 +252,8 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 			{ value: 'CASH', label: 'Cash' },
 			{ value: 'TRANSFER', label: 'Overschrijving' },
 			{ value: 'PAYCONIQ', label: 'Payconiq' },
+            { value: 'OVAM', label: 'OVAM' },
+            { value: 'LETS', label: 'LETS' },
 			])
 		.label('Betalingswijze'),
         nga.field('accept_terms_date').label('Goedkeuring afspraken'),
@@ -260,10 +264,6 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         	.targetFields([ // which reservation fields to display in the datagrid / form
         		nga.field('reservation_id'),
         		nga.field('tool_id'),
-//        		nga.field('tool_id', 'reference')
-//            		.label('Tool code')
-//            		.targetEntity(tool)
-//            		.targetField(nga.field('code')),
         		nga.field('title'),
         		nga.field('startsAt'),
         		nga.field('endsAt'),
