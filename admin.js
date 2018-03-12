@@ -275,6 +275,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 
     tool.listView()
         .fields([
+            nga.field('tool_id').label('Tool id').isDetailLink(true),
             nga.field('code').isDetailLink(true),
             nga.field('name').label('Naam').isDetailLink(true),
             nga.field('brand').label('Merk'),
@@ -284,8 +285,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         		{ value: 'general', label: 'Algemeen' },
         		{ value: 'car', label: 'Auto' },
         		{ value: 'construction', label: 'Bouw' },
-        		{ value: 'electricity', label: 'Elektriciteit' },
-        		{ value: 'sanitary', label: 'Sanitair' },
+        		{ value: 'technics', label: 'Technieken' },
         		{ value: 'wood', label: 'Schrijnwerk' },
         		{ value: 'garden', label: 'Tuin' },
         	]).label('Categorie')
@@ -334,8 +334,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         		{ value: 'general', label: 'Algemeen' },
         		{ value: 'car', label: 'Auto' },
         		{ value: 'construction', label: 'Bouw' },
-        		{ value: 'electricity', label: 'Elektriciteit' },
-        		{ value: 'sanitary', label: 'Sanitair' },
+        		{ value: 'technics', label: 'Technieken' },
         		{ value: 'wood', label: 'Schrijnwerk' },
         		{ value: 'garden', label: 'Tuin' },
         ]).label('Categorie'),
