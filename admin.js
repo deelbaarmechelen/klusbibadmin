@@ -173,9 +173,9 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 			{ value: 'DELETED', label: 'Verwijderd' },
 		]),
         nga.field('firstname')
-            .validation({ required: true, minlength: 2, maxlength: 20 }),
+            .validation({ required: true, minlength: 2, maxlength: 255 }),
         nga.field('lastname')
-            .validation({ required: true, minlength: 2, maxlength: 20 }),
+            .validation({ required: true, minlength: 2, maxlength: 255 }),
         nga.field('email', 'email'),
 //        nga.field('hash', 'password'),
         nga.field('role', 'choice')
