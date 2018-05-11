@@ -124,6 +124,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
     			{ value: 'DISABLED', label: 'Inactief' },
     			{ value: 'CONFIRM_EMAIL', label: 'Email verificatie' },
     			{ value: 'CHECK_PAYMENT', label: 'Betaling nakijken' },
+                { value: 'EXPIRED', label: 'Lidmaatschap vervallen' },
     			{ value: 'DELETED', label: 'Verwijderd' },
     		]).label('Status'),
     	])
@@ -170,6 +171,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 			{ value: 'DISABLED', label: 'Inactief' },
 			{ value: 'CONFIRM_EMAIL', label: 'Email verificatie' },
 			{ value: 'CHECK_PAYMENT', label: 'Betaling nakijken' },
+            { value: 'EXPIRED', label: 'Lidmaatschap vervallen' },
 			{ value: 'DELETED', label: 'Verwijderd' },
 		]),
         nga.field('firstname')
@@ -228,6 +230,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 			{ value: 'DISABLED', label: 'Inactief' },
 			{ value: 'CONFIRM_EMAIL', label: 'Email verificatie' },
 			{ value: 'CHECK_PAYMENT', label: 'Betaling nakijken' },
+            { value: 'EXPIRED', label: 'Lidmaatschap vervallen' },
 			{ value: 'DELETED', label: 'Verwijderd' },
 		]),
         nga.field('firstname'),
