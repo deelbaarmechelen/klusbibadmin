@@ -89,6 +89,7 @@ angular.module('myApp').config(function ($translateProvider) {
         'USERS': 'Gebruikers',
         'RESERVATIONS': 'Reservaties',
         'CONSUMERS': 'Verbruiksmaterialen',
+        'PAYMENTS': 'Betalingen',
         'TOOL': 'Materiaal',
         'USER': 'Gebruiker',
         'RESERVATION': 'Reservatie',
@@ -148,6 +149,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
     		nga.field('membership_start_date').label('lidmaatschap start'),
     		nga.field('membership_end_date').label('lidmaatschap einde'),
             nga.field('email', 'email'),
+            nga.field('email_state'),
             nga.field('birth_date').label('Geboortedatum'),
             nga.field('address').label('Adres'),
             nga.field('postal_code').label('Postcode'),
@@ -179,6 +181,12 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         nga.field('lastname')
             .validation({ required: true, minlength: 2, maxlength: 255 }),
         nga.field('email', 'email'),
+        nga.field('email_state', 'choice')
+            .choices([
+                { value: 'CONFIRM_EMAIL', label: 'Email verificatie' },
+                { value: 'CONFIRMED', label: 'Email bevestigd' },
+                { value: 'BOUNCED', label: 'Email geweigerd' },
+            ]),
 //        nga.field('hash', 'password'),
         nga.field('role', 'choice')
     		.choices([
@@ -241,6 +249,13 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 			{ value: 'member', label: 'Lid' },
 			{ value: 'supporter', label: 'Steunlid' },
 			]),
+        nga.field('email', 'email'),
+        nga.field('email_state', 'choice')
+            .choices([
+                { value: 'CONFIRM_EMAIL', label: 'Email verificatie' },
+                { value: 'CONFIRMED', label: 'Email bevestigd' },
+                { value: 'BOUNCED', label: 'Email geweigerd' },
+            ]),
         nga.field('membership_start_date').label('Start lidmaatschap (JJJJ/MM/DD)'),
         nga.field('membership_end_date').label('Einde lidmaatschap (JJJJ/MM/DD)'),
         nga.field('birth_date').label('Geboortedatum (JJJJ/MM/DD)'),
@@ -443,7 +458,14 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 				{ value: 'CANCELLED', label: 'Annulatie' },
 				{ value: 'CLOSED', label: 'Beëindigd' },
 			])
-    ]);
+        ])
+        .listActions([
+            '<ma-show-button entry="entry" entity="entity" label="Bekijken" size="xs">' +
+            '</ma-show-button>',
+            '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
+            '</ma-edit-button>',
+            '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
+            '</ma-delete-button>']);
     reservation.creationView().fields([
         nga.field('tool_id'),
         nga.field('tool_id', 'reference')
@@ -483,8 +505,12 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         nga.field('comment').label('Opmerking')
     ]);
     reservation.editionView().fields(reservation.creationView().fields());
+    reservation.showView().fields([
+        nga.field('reservation_id'),
+        reservation.creationView().fields()]);
     admin.addEntity(reservation);
 
+    // Consumers
     var consumer = nga.entity('consumers')
 		.identifier(nga.field('consumer_id')); // the API endpoint for tools will be '__env.apiUrl/consumers/:id
 	consumer.listView()
@@ -496,7 +522,14 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 	        nga.field('description').isDetailLink(true),
 	        nga.field('price'),
 	        nga.field('unit')
-	    ]);
+	    ])
+        .listActions([
+            '<ma-show-button entry="entry" entity="entity" label="Bekijken" size="xs">' +
+            '</ma-show-button>',
+            '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
+            '</ma-edit-button>',
+            '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
+            '</ma-delete-button>']);
 	consumer.creationView().fields([
 	    nga.field('category'),
 	    nga.field('brand'),
@@ -518,8 +551,61 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 	consumer.editionView().fields(
 	        nga.field('consumer_id').editable(false),
 	        consumer.creationView().fields());
+    consumer.showView().fields([
+        nga.field('consumer_id'),
+        consumer.creationView().fields()]);
 	admin.addEntity(consumer);
 
+	// Payments
+    var payment = nga.entity('payments').identifier(nga.field('payment_id'));
+    payment.listView()
+        .fields([
+            nga.field('payment_id').isDetailLink(true),
+            nga.field('order_id').isDetailLink(true),
+            nga.field('user_id'),
+            nga.field('payment_date'),
+            nga.field('mode'),
+            nga.field('amount'),
+            nga.field('currency')
+        ])
+        .listActions([
+            '<ma-show-button entry="entry" entity="entity" label="Bekijken" size="xs">' +
+            '</ma-show-button>',
+            '<ma-edit-button entry="entry" entity="entity" label="Bewerken" size="xs">' +
+            '</ma-edit-button>',
+            '<ma-delete-button entry="entry" entity="entity" label="Verwijderen" size="xs">' +
+            '</ma-delete-button>']);
+    payment.creationView().fields([
+        nga.field('order_id'),
+        nga.field('user_id'),
+        nga.field('payment_date'),
+        nga.field('state', 'choice')
+            .choices([
+                { value: 'NEW', label: 'Nieuw' },
+                { value: 'OPEN', label: 'Open' },
+                { value: 'SUCCESS', label: 'Succes' },
+                { value: 'FAILED', label: 'Mislukt' },
+            ]),
+        nga.field('mode', 'choice')
+            .choices([
+                { value: 'TRANSFER', label: 'Overschrijving' },
+                { value: 'MOLLIE', label: 'Online betaling (Mollie)' },
+                { value: 'LETS', label: 'LETS' },
+                { value: 'MBON', label: 'Mechelen Bon' },
+            ]),
+        nga.field('amount'),
+        nga.field('currency')
+
+    ]);
+    payment.editionView().fields(
+        nga.field('payment_id').editable(false),
+        payment.creationView().fields());
+    payment.showView().fields([
+        nga.field('payment_id'),
+        payment.creationView().fields()]);
+    admin.addEntity(payment);
+
+    // Menu
 	admin.menu(nga.menu()
 	  .addChild(nga.menu(user).title('USERS')
 //			  .addChild(nga.menu().title('Paswoord reset'))
@@ -527,6 +613,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 	  .addChild(nga.menu(tool).title('TOOLS'))
 	  .addChild(nga.menu(reservation).title('RESERVATIONS'))
 	  .addChild(nga.menu(consumer).title('CONSUMERS'))
+	  .addChild(nga.menu(payment).title('PAYMENTS'))
 			  //.icon('<span class="glyphicon glyphicon-tags"></span>'))
       .addChild(nga.menu().template(`
         <a href="/login.html">
