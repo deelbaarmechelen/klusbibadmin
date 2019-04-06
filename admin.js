@@ -194,9 +194,8 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
     			{ value: 'member', label: 'Lid' },
     			{ value: 'supporter', label: 'Steunlid' },
     	]),
-        nga.field('membership_start_date').label('Start lidmaatschap (JJJJ/MM/DD)'),
-        nga.field('membership_end_date').label('Einde lidmaatschap (JJJJ/MM/DD)'),
-        nga.field('birth_date').label('Geboortedatum (JJJJ/MM/DD)'),
+        nga.field('membership_start_date', 'date').label('Start lidmaatschap (JJJJ-MM-DD)'),
+        nga.field('membership_end_date', 'date').label('Einde lidmaatschap (JJJJ-MM-DD)'),
         nga.field('address').label('Adres').validation({ required: false, maxlength: 50 }),
         nga.field('postal_code').label('Postcode').validation({ required: false, maxlength: 5 }),
         nga.field('city').label('Stad').validation({ required: false, maxlength: 50 }),
@@ -208,11 +207,12 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 			{ value: 'CASH', label: 'Cash' },
 			{ value: 'TRANSFER', label: 'Overschrijving' },
 			{ value: 'PAYCONIQ', label: 'Payconiq' },
+            { value: 'MOLLIE', label: 'Mollie (online betaling)' },
             { value: 'OVAM', label: 'OVAM' },
             { value: 'LETS', label: 'LETS' },
 			])
         .label('Betalingswijze').validation({ required: false, maxlength: 20 }),
-        nga.field('accept_terms_date').label('Goedkeuring afspraken (JJJJ/MM/DD)'),
+        nga.field('accept_terms_date', 'date').label('Goedkeuring afspraken (JJJJ-MM-DD)'),
     ]);
     user.editionView()
     	.title('Edit user "{{ entry.values.firstname }} {{ entry.values.lastname }}"')
@@ -256,9 +256,8 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
                 { value: 'CONFIRMED', label: 'Email bevestigd' },
                 { value: 'BOUNCED', label: 'Email geweigerd' },
             ]),
-        nga.field('membership_start_date').label('Start lidmaatschap (JJJJ/MM/DD)'),
-        nga.field('membership_end_date').label('Einde lidmaatschap (JJJJ/MM/DD)'),
-        nga.field('birth_date').label('Geboortedatum (JJJJ/MM/DD)'),
+        nga.field('membership_start_date', 'date').label('Start lidmaatschap (JJJJ-MM-DD)'),
+        nga.field('membership_end_date', 'date').label('Einde lidmaatschap (JJJJ-MM-DD)'),
         nga.field('address').label('Adres'),
         nga.field('postal_code').label('Postcode'),
         nga.field('city').label('Stad'),
@@ -270,13 +269,14 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 			{ value: 'CASH', label: 'Cash' },
 			{ value: 'TRANSFER', label: 'Overschrijving' },
 			{ value: 'PAYCONIQ', label: 'Payconiq' },
+            { value: 'MOLLIE', label: 'Mollie (online betaling)' },
             { value: 'OVAM', label: 'OVAM' },
             { value: 'LETS', label: 'LETS' },
 			])
 		.label('Betalingswijze'),
-        nga.field('accept_terms_date').label('Goedkeuring afspraken'),
-        nga.field('created_at.date').label('Aangemaakt op'),
-        nga.field('updated_at.date').label('Laatste wijziging'),
+        nga.field('accept_terms_date', 'date').label('Goedkeuring afspraken'),
+        nga.field('created_at.date', 'date').label('Aangemaakt op'),
+        nga.field('updated_at.date', 'date').label('Laatste wijziging'),
         nga.field('reservations', 'embedded_list') // Define a 1-N relationship with the (embedded) comment entity
         	.targetEntity(reservation)
         	.targetFields([ // which reservation fields to display in the datagrid / form
@@ -369,7 +369,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         nga.field('owner_id')
         	.label('Eigenaar'),
 
-        nga.field('reception_date').label('Ontvangen op (JJJJ/MM/DD)'),
+        nga.field('reception_date', 'date').label('Ontvangen op (JJJJ-MM-DD)'),
         nga.field('serial').label('Serienummer').validation({ required: false, maxlength: 50 }),
         nga.field('manufacturing_year').label('Fabrikatie jaar')
                     .validation({ minlength: 4, maxlength: 4 }),
