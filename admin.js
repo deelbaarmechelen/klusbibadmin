@@ -457,6 +457,7 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 				{ value: 'CONFIRMED', label: 'Bevestigd' },
 				{ value: 'CANCELLED', label: 'Annulatie' },
 				{ value: 'CLOSED', label: 'Beëindigd' },
+                { value: 'DELETED', label: 'Verwijderd' },
 			])
         ])
         .listActions([
@@ -501,6 +502,8 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
 				{ value: 'REQUESTED', label: 'Aangevraagd' },
 				{ value: 'CONFIRMED', label: 'Bevestigd' },
 				{ value: 'CANCELLED', label: 'Annulatie' },
+                { value: 'CLOSED', label: 'Afgesloten' },
+                { value: 'DELETED', label: 'Verwijderd' },
 		]),
         nga.field('comment').label('Opmerking')
     ]);
