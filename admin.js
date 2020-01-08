@@ -45,7 +45,7 @@ angular.module('myApp').config(function ($translateProvider) {
     });
     $translateProvider.translations('nl', {
         'BACK': 'Terug',
-        'DELETE': 'Verwijdeen',
+        'DELETE': 'Verwijderen',
         'CREATE': 'Aanmaken',
         'EDIT': 'Bewerken',
         'EXPORT': 'Exporteren',
@@ -204,12 +204,16 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         nga.field('registration_number').label('Rijksregistratie').validation({ required: false, maxlength: 15 }),
         nga.field('payment_mode', 'choice')
         .choices([
-			{ value: 'CASH', label: 'Cash' },
-			{ value: 'TRANSFER', label: 'Overschrijving' },
-			{ value: 'PAYCONIQ', label: 'Payconiq' },
-            { value: 'MOLLIE', label: 'Mollie (online betaling)' },
+            { value: 'CASH', label: 'Cash' },
+            { value: 'TRANSFER', label: 'Overschrijving' },
+            { value: 'MOLLIE', label: 'Online betaling (Mollie)' },
+            { value: 'STROOM', label: 'STROOM' },
+            { value: 'PAYCONIQ', label: 'Payconiq' },
+            { value: 'SPONSORING', label: 'Sponsoring' },
             { value: 'OVAM', label: 'OVAM' },
             { value: 'LETS', label: 'LETS' },
+            { value: 'MBON', label: 'Mechelen Bon' },
+            { value: 'OTHER', label: 'Andere' },
 			])
         .label('Betalingswijze').validation({ required: false, maxlength: 20 }),
         nga.field('accept_terms_date', 'date').label('Goedkeuring afspraken (JJJJ-MM-DD)'),
@@ -266,13 +270,17 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
         nga.field('registration_number').label('Rijksregistratie'),
         nga.field('payment_mode', 'choice')
         .choices([
-			{ value: 'CASH', label: 'Cash' },
-			{ value: 'TRANSFER', label: 'Overschrijving' },
-			{ value: 'PAYCONIQ', label: 'Payconiq' },
-            { value: 'MOLLIE', label: 'Mollie (online betaling)' },
+            { value: 'CASH', label: 'Cash' },
+            { value: 'TRANSFER', label: 'Overschrijving' },
+            { value: 'MOLLIE', label: 'Online betaling (Mollie)' },
+            { value: 'STROOM', label: 'STROOM' },
+            { value: 'PAYCONIQ', label: 'Payconiq' },
+            { value: 'SPONSORING', label: 'Sponsoring' },
             { value: 'OVAM', label: 'OVAM' },
             { value: 'LETS', label: 'LETS' },
-			])
+            { value: 'MBON', label: 'Mechelen Bon' },
+            { value: 'OTHER', label: 'Andere' },
+        ])
 		.label('Betalingswijze'),
         nga.field('accept_terms_date', 'date').label('Goedkeuring afspraken'),
         nga.field('created_at.date', 'date').label('Aangemaakt op'),
@@ -593,8 +601,14 @@ angular.module('myApp').config(['NgAdminConfigurationProvider', '__env', functio
             .choices([
                 { value: 'TRANSFER', label: 'Overschrijving' },
                 { value: 'MOLLIE', label: 'Online betaling (Mollie)' },
+                { value: 'STROOM', label: 'STROOM' },
+                { value: 'PAYCONIQ', label: 'Payconiq' },
+                { value: 'CASH', label: 'Cash' },
+                { value: 'SPONSORING', label: 'Sponsoring' },
+                { value: 'OVAM', label: 'OVAM' },
                 { value: 'LETS', label: 'LETS' },
                 { value: 'MBON', label: 'Mechelen Bon' },
+                { value: 'OTHER', label: 'Andere' },
             ]),
         nga.field('amount'),
         nga.field('currency')
