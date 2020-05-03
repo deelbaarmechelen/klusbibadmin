@@ -5,7 +5,7 @@
   "engines": {
     "node": "6.9.4"
   },
-  "repository": "https://github.com/renardeau/klusbibadmin",
+  "repository": "https://github.com/deelbaarmechelen/klusbibadmin",
   "scripts": {
     "prestart": "npm install",
     "start": "http-server -p 5000 -c-1 .",
